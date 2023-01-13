@@ -18,6 +18,3 @@ export const BLOCK_I = [
   [0, 0, 0, 0],
 ]
 
-
-
-

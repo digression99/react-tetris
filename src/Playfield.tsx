@@ -1,29 +1,83 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { BLOCK_I, PLAYFIELD_MAP, PLAYFIELD_PADDING } from './constants'
 import { useCountTime } from './hooks/useCountTime'
 import { useKeyboard } from './hooks/useKeyboard'
-import { BlockPosition } from './types'
-import { calculatePosition, drawBlock } from './utils/playfield'
+import { BlockBitMap, Position, FieldBitMap } from './types'
+import { isBlockInBoundary } from './utils/block'
+import { calculatePosition, drawBlock, mergeBlock } from './utils/playfield'
+
+const initialPosition = { x: PLAYFIELD_PADDING, y: 0 }
+
+function usePosition(block: BlockBitMap) {
+  const [blockPosition, setPosition] = useState(initialPosition)
+
+  const changePosition = (requestedPosition: Position) => {
+    // TODO - this method should check the field, not only the block.
+    if (!isBlockInBoundary(requestedPosition, block)) {
+      return { original: { ...blockPosition }, requested: requestedPosition, result: false }
+    }
+    setPosition(requestedPosition)
+    return { original: { ...blockPosition }, requested: requestedPosition, result: true }
+  }
+
+  return {
+    blockPosition,
+    changePosition
+  }
+}
 
 export function Playfield() {
-  const [field, setField] = useState<number[][] | undefined>(undefined)
-  // I think padding should be hidden from Playfield for moving.
-  const [blockPosition, setBlockPosition] = useState({ x: PLAYFIELD_PADDING, y: 0 })
-  const { time } = useCountTime()
+  const [field, setField] = useState<FieldBitMap | undefined>(undefined)
+  const { blockPosition, changePosition } = usePosition(BLOCK_I)
+
+  const { time, start } = useCountTime((t: number) => {
+    if (!field) return
+    const { result, original, requested } = changePosition({
+      ...blockPosition,
+      y: blockPosition.y + 1
+    })
+
+    console.log('original, requested', original, requested, result)
+    if (!result) {
+      // merge.
+      setField(mergeBlock(field, BLOCK_I, blockPosition))
+      changePosition(initialPosition)
+      return
+    }
+
+    // TODO - update drawing the field to reactive way.
+    setField(drawBlock(BLOCK_I, field, requested, original))
+  }, [field, blockPosition])
 
   useKeyboard((key: string) => {
-    setBlockPosition((pos: BlockPosition) => calculatePosition(pos, key))
+    if (!field) return
+    const returnedPosition = calculatePosition(blockPosition, key)
+    const { result, original, requested } = changePosition(returnedPosition)
+
+    console.log('[useKeyboard] result : ', result, field, original, requested)
+
+    if (result) {
+      setField(drawBlock(BLOCK_I, field, requested, original))
+      return
+    }
+
+    if (key === 's') {
+      console.log('failed and s...')
+      // TODO - should check if the fail is due to hitting the bottom, or
+      // you are hitting the left or right side.
+      setField(mergeBlock(field, BLOCK_I, blockPosition))
+      changePosition(initialPosition)
+    }
   })
 
-  useEffect(() => {
-    console.log('new block position :', blockPosition)
-    const newField = drawBlock(BLOCK_I, PLAYFIELD_MAP, blockPosition)
-    console.log('initial new field :', newField)
-    setField(newField)
-  }, [blockPosition])
+  const onStart = () => {
+    setField(drawBlock(BLOCK_I, PLAYFIELD_MAP, blockPosition, blockPosition))
+    start()
+  }
 
   return (
     <div>
+      <button onClick={onStart}>Start!</button>
       {
         field &&
         field.map((row, rowIndex) => {
