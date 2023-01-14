@@ -1,24 +1,17 @@
-import { PLAYFIELD_HEIGHT } from "../constants"
-import { BlockBitMap, Position, FieldBitMap } from "../types"
+import { PLAYFIELD_HEIGHT } from "../constants/playfield"
+import { Position, FieldBitMap, Block } from "../types"
+import { getBlockBitMap } from "./block"
 
-export function drawBlock(block: number[][], field: number[][], pos: Position, prevPos: Position) {
-  const { x, y } = pos
-  const { x: prevX, y: prevY } = prevPos
-  const h = block.length
-  const w = block[0].length
+export function drawBlockToFieldBitMap(block: Block, field: FieldBitMap) {
+  const { x, y } = block.position
+  const blockBitMap = getBlockBitMap(block)
+  const h = blockBitMap.length
+  const w = blockBitMap[0].length
   const newField = field.map(row => [...row])
 
   for (let i = 0; i < h; ++i) {
     for (let j = 0; j < w; ++j) {
-      if (block[i][j] === 1) {
-        newField[prevY + i][prevX + j] = 0
-      }
-    }
-  }
-
-  for (let i = 0; i < h; ++i) {
-    for (let j = 0; j < w; ++j) {
-      if (block[i][j] === 1) {
+      if (blockBitMap[i][j] === 1) {
         newField[y + i][x + j] = 1
       }
     }
@@ -43,13 +36,14 @@ export const calculatePosition = (pos: Position, key: string) => {
   return pos
 }
 
-export function mergeBlock(field: FieldBitMap, block: BlockBitMap, blockPosition: Position) {
-  const l = block.length
-  const w = block[0].length
+export function mergeBlockToFieldBitMap(field: FieldBitMap, block: Block) {
+  const blockBitMap = getBlockBitMap(block)
+  const l = blockBitMap.length
+  const w = blockBitMap[0].length
   const newField = field.map(row => [...row])
 
   for (let i = 0; i < l; ++i) {
-    for (let j = 0; j < w; ++j) { if (block[i][j] === 1) newField[blockPosition.y + i][blockPosition.x + j] = 1 }
+    for (let j = 0; j < w; ++j) { if (blockBitMap[i][j] === 1) newField[block.position.y + i][block.position.x + j] = 1 }
   }
 
   return newField

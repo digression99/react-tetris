@@ -11,10 +11,4 @@ export const PLAYFIELD_MAP = [
   BOTTOM
 ]
 
-export const BLOCK_I = [
-  [0, 0, 0, 0],
-  [1, 1, 1, 1],
-  [0, 0, 0, 0],
-  [0, 0, 0, 0],
-]
 
