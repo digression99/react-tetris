@@ -9,3 +9,7 @@
 - [ ] merge block if the block touches the bottom, and spawn the new block.
 - [ ] rotate the block.
 - [ ] create a pixel object that represents which pixel is which color.
+
+### Others
+
+- [ ] Apply prettier, eslint configuration
