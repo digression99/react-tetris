@@ -11,10 +11,13 @@ const initialPosition = { x: PLAYFIELD_PADDING, y: 0 }
 function usePosition(block: BlockBitMap) {
   const [blockPosition, setPosition] = useState(initialPosition)
 
-  const changePosition = (requestedPosition: Position) => {
-    // TODO - this method should check the field, not only the block.
-    if (!isBlockInBoundary(requestedPosition, block)) {
-      return { original: { ...blockPosition }, requested: requestedPosition, result: false }
+  const changePosition = (requestedPosition: Position, field: FieldBitMap) => {
+    if (!isBlockInBoundary(requestedPosition, blockPosition, block, field)) {
+      return {
+        original: { ...blockPosition },
+        requested: requestedPosition,
+        result: false
+      }
     }
     setPosition(requestedPosition)
     return { original: { ...blockPosition }, requested: requestedPosition, result: true }
@@ -35,13 +38,12 @@ export function Playfield() {
     const { result, original, requested } = changePosition({
       ...blockPosition,
       y: blockPosition.y + 1
-    })
+    }, field)
 
     console.log('original, requested', original, requested, result)
     if (!result) {
-      // merge.
       setField(mergeBlock(field, BLOCK_I, blockPosition))
-      changePosition(initialPosition)
+      changePosition(initialPosition, field)
       return
     }
 
@@ -52,9 +54,7 @@ export function Playfield() {
   useKeyboard((key: string) => {
     if (!field) return
     const returnedPosition = calculatePosition(blockPosition, key)
-    const { result, original, requested } = changePosition(returnedPosition)
-
-    console.log('[useKeyboard] result : ', result, field, original, requested)
+    const { result, original, requested } = changePosition(returnedPosition, field)
 
     if (result) {
       setField(drawBlock(BLOCK_I, field, requested, original))
@@ -62,11 +62,8 @@ export function Playfield() {
     }
 
     if (key === 's') {
-      console.log('failed and s...')
-      // TODO - should check if the fail is due to hitting the bottom, or
-      // you are hitting the left or right side.
       setField(mergeBlock(field, BLOCK_I, blockPosition))
-      changePosition(initialPosition)
+      changePosition(initialPosition, field)
     }
   })
 
@@ -78,21 +75,23 @@ export function Playfield() {
   return (
     <div>
       <button onClick={onStart}>Start!</button>
-      {
-        field &&
-        field.map((row, rowIndex) => {
-          return (
-            <div key={rowIndex}>
-              {row.map((block, blockIndex) => {
-                if (block === 0) {
-                  return <span key={`${rowIndex}-${blockIndex}-o`}>o </span>
-                }
-                return <span key={`${rowIndex}-${blockIndex}-x`}>x </span>
-              })}
-            </div>
-          )
-        })
-      }
+      <pre>
+        {
+          field &&
+          field.map((row, rowIndex) => {
+            return (
+              <div key={rowIndex} style={{ fontSize: '20px' }}>
+                {row.map((block, blockIndex) => {
+                  if (block === 0) {
+                    return <span key={`${rowIndex}-${blockIndex}-o`} style={{ color: 'black', fontWeight: 'bold' }}>o </span>
+                  }
+                  return <span key={`${rowIndex}-${blockIndex}-x`} style={{ color: 'red' }}>x </span>
+                })}
+              </div>
+            )
+          })
+        }
+      </pre>
     </div>
   )
 }
