@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import { createPlayfieldMap } from '../../constants/playfield'
 import { FieldBitMap } from '../../types'
-import { drawBlockToFieldBitMap, mergeBlockToFieldBitMap } from '../../utils/playfield'
+import { drawBlockToFieldBitMap, mergeBlockToFieldBitMap, removeFullLines } from '../../utils/playfield'
 
 export interface PlayfieldState {
   fieldBuffer: FieldBitMap, // for merged blocks.
@@ -31,7 +31,7 @@ const playfieldSlice = createSlice({
     mergeBlock: (state, action) => {
       const { block } = action.payload
       const { fieldBuffer } = state
-      state.fieldBuffer = mergeBlockToFieldBitMap(fieldBuffer, block)
+      state.fieldBuffer = removeFullLines(mergeBlockToFieldBitMap(fieldBuffer, block))
     }
   }
 })

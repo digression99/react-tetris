@@ -16,6 +16,9 @@
 - [ ] Implement gravity change.
 - [x] Implement counter-clockwise rotation.
 - [ ] Show next block.
+- [ ] Show colors for every pixel.
+  - Change every pixel as a object representation.
+  - Add type for pixel.
 
 ### Others
 

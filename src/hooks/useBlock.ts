@@ -45,8 +45,6 @@ export function useBlock() {
     if (!field || !currentBlock) return { requested: rotation, original: 0, result: false }
 
     const rotatedBlock = rotateBlock(currentBlock, rotation)
-
-    console.log('[rotatedBlock] : ', rotatedBlock, isBlockInBoundary(rotatedBlock.position, rotatedBlock, field))
     if (!isBlockInBoundary(rotatedBlock.position, rotatedBlock, field)) {
       return { requested: rotation, original: currentBlock.rot, result: false }
     }

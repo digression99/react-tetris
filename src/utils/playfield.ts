@@ -1,4 +1,4 @@
-import { PLAYFIELD_HEIGHT } from "../constants/playfield"
+import { NORMAL_ROW, PLAYFIELD_HEIGHT, PLAYFIELD_PADDING } from "../constants/playfield"
 import { Position, FieldBitMap, Block } from "../types"
 import { getBlockBitMap } from "./block"
 
@@ -45,5 +45,22 @@ export function mergeBlockToFieldBitMap(field: FieldBitMap, block: Block) {
     }
   }
 
+  return newField
+}
+
+export function removeFullLines(field: FieldBitMap): FieldBitMap {
+  const l = field.length
+  const newField = field.map(row => [...row])
+  newField.reverse()
+
+  for (let i = PLAYFIELD_PADDING; i < l; ++i) {
+    const isFullLine = newField[i].every(pixel => pixel === 1)
+    if (!isFullLine) continue
+    newField.splice(i, 1)
+    newField.push(NORMAL_ROW)
+    --i
+  }
+
+  newField.reverse()
   return newField
 }
