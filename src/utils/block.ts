@@ -4,24 +4,27 @@ import { Block, BlockRotation, BlockType, FieldBitMap, Position } from "../types
 
 export function isBlockInBoundary(nextPos: Position, block: Block | undefined, field: FieldBitMap) {
   if (!block) return false
-
   const blockBitMap = getBlockBitMap(block)
+
+  console.log('[isBlockInBoundary], blockBitMap', blockBitMap)
   const l = blockBitMap.length
   const w = blockBitMap[0].length
-  const { x, y } = block.position
   const { x: nextX, y: nextY } = nextPos
 
   let isPixelInBoundary = true
 
   const newField = field.map(row => [...row])
 
-  for (let i = 0; i < l; ++i) {
-    for (let j = 0; j < w; ++j) {
-      if (blockBitMap[i][j] === 1) {
-        newField[i + y][j + x] = 0
-      }
-    }
-  }
+  // NOTE - there's a possibility that the rotated block is already
+  // collided with the wall.
+  // should check the block dimension, or the block collision.
+  // for (let i = 0; i < l; ++i) {
+  //   for (let j = 0; j < w; ++j) {
+  //     if (blockBitMap[i][j] === 1) {
+  //       newField[i + y][j + x] = 0
+  //     }
+  //   }
+  // }
 
   for (let i = 0; i < l; ++i) {
     for (let j = 0; j < w; ++j) {
@@ -59,10 +62,10 @@ export function generateRandomBlockBag(): Block[] {
 }
 
 export function rotateBlock(block: Block, direction: BlockRotation) {
-    return {
-      ...block,
-      rot: direction === 'clockwise'
-        ? (block.rot + 1) % ROTATION_COUNT
-        : (block.rot + ROTATION_COUNT - 1) % ROTATION_COUNT
-    }
+  return {
+    ...block,
+    rot: direction === 'clockwise'
+      ? (block.rot + 1) % ROTATION_COUNT
+      : (block.rot + ROTATION_COUNT - 1) % ROTATION_COUNT
+  }
 }

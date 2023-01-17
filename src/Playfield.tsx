@@ -4,7 +4,7 @@ import { usePlayfield } from './hooks/usePlayfield'
 import { useGameController } from './hooks/useGameController'
 
 export function Playfield() {
-  const { mergeBlock, field } = usePlayfield()
+  const { mergeBlock, fieldBuffer, field } = usePlayfield()
   const { currentBlock, changeBlockPosition } = useBlock()
 
   useGameController()
@@ -12,15 +12,17 @@ export function Playfield() {
   const { start } = useCountTime((t: number) => {
     if (!field || !currentBlock) return
 
+    // NOTE - using "fieldBuffer" is too concrete.
+    // Should hide the logic.
     const { result } = changeBlockPosition({
       ...currentBlock.position,
       y: currentBlock.position.y + 1
-    }, field)
+    }, fieldBuffer)
 
     if (!result) {
       mergeBlock()
     }
-  }, [field, currentBlock])
+  }, [fieldBuffer, currentBlock])
 
 
   const onStart = () => {

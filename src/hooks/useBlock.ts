@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { actions, selectBlockHistory, selectCurrentBlock, selectNextBlock } from '../features/block/blockSlice'
 import { BlockRotation, FieldBitMap, Position } from '../types'
-import { isBlockInBoundary } from '../utils/block'
+import { isBlockInBoundary, rotateBlock } from '../utils/block'
 
 export function useBlock() {
   const dispatch = useAppDispatch()
@@ -17,9 +17,7 @@ export function useBlock() {
   const spawnNextBlock = () => dispatch(actions.spawnNextBlock())
 
   const changeBlockPosition = (requestedPosition: Position, field: FieldBitMap) => {
-    // NOTE - should we need to use "result"?
-    // Could we check the collision/soft drop reactively to check if the block
-    // is merged?
+    // TODO - define the logic inside the reducer, not in the hook.
     if (!currentBlock) return {
       original: requestedPosition,
       requested: requestedPosition,
@@ -42,7 +40,20 @@ export function useBlock() {
     }
   }
 
-  const rotateCurrentBlock = (rotation: BlockRotation) => dispatch(actions.rotateCurrentBlock({ rotation }))
+  const rotateCurrentBlock = (rotation: BlockRotation, field: FieldBitMap) => {
+    // TODO - define the logic inside the reducer, not in the hook.
+    if (!field || !currentBlock) return { requested: rotation, original: 0, result: false }
+
+    const rotatedBlock = rotateBlock(currentBlock, rotation)
+
+    console.log('[rotatedBlock] : ', rotatedBlock, isBlockInBoundary(rotatedBlock.position, rotatedBlock, field))
+    if (!isBlockInBoundary(rotatedBlock.position, rotatedBlock, field)) {
+      return { requested: rotation, original: currentBlock.rot, result: false }
+    }
+
+    dispatch(actions.rotateCurrentBlock({ rotation }))
+    return { requested: rotation, original: currentBlock.rot, result: true }
+  }
 
   return {
     // states.

@@ -4,7 +4,7 @@ import { useBlock } from './useBlock'
 import { calculatePosition } from '../utils/playfield'
 
 export function useGameController() {
-  const { field, mergeBlock } = usePlayfield()
+  const { field, mergeBlock, fieldBuffer } = usePlayfield()
   const { currentBlock, rotateCurrentBlock, changeBlockPosition } = useBlock()
 
   useKeyboard((key: string) => {
@@ -12,24 +12,25 @@ export function useGameController() {
     switch (key) {
       // case 'w': {
       //   // Hard drop.
-      //   rotateCurrentBlock()
       //   break
       // }
 
       case 'j': {
-        rotateCurrentBlock('c-clockwise')
+        // TODO - should check if the rotation fails.
+        rotateCurrentBlock('c-clockwise', fieldBuffer)
         break
       }
 
       case 'k': {
-        rotateCurrentBlock('clockwise')
+        // TODO - should check if the rotation fails.
+        rotateCurrentBlock('clockwise', fieldBuffer)
         break
       }
       case 'a':
       case 's':
       case 'd': {
         const returnedPosition = calculatePosition(currentBlock.position, key)
-        const { result } = changeBlockPosition(returnedPosition, field)
+        const { result } = changeBlockPosition(returnedPosition, fieldBuffer)
 
         if (key === 's' && !result) {
           mergeBlock()

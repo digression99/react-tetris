@@ -5,8 +5,7 @@ import { FieldBitMap } from '../../types'
 import { drawBlockToFieldBitMap, mergeBlockToFieldBitMap } from '../../utils/playfield'
 
 export interface PlayfieldState {
-  fieldBuffer: FieldBitMap,
-  // field?: FieldBitMap
+  fieldBuffer: FieldBitMap, // for merged blocks.
   gameStatus: 'pending' | 'started' | 'done',
   gravity: number // if the gravity changes, the dropping speed changes.
 }
@@ -15,7 +14,7 @@ export const initialState: PlayfieldState = {
   fieldBuffer: createPlayfieldMap(), // for merged blocks.
   // field: undefined, // for active map.
   gameStatus: 'pending',
-    gravity: 1
+  gravity: 1
 }
 
 const playfieldSlice = createSlice({
@@ -48,6 +47,10 @@ export const selectCurrentFieldMap = (state: RootState) => {
   // TODO - check if the field map updates
   // after the block position changes.
   return drawBlockToFieldBitMap(currentBlock, fieldBuffer)
+}
+
+export const selectFieldBuffer = (state: RootState) => {
+  return state.playfield.fieldBuffer
 }
 
 export default playfieldSlice.reducer;
