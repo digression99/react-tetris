@@ -16,7 +16,6 @@ export function useCountTime(fn: (time: number) => void, deps: any[]) {
     // start timer.
     const timerId = window.setInterval(() => {
       setTime(t => {
-        console.log('changing time')
         return t + 1
       })
     }, 1000)

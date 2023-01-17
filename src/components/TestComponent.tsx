@@ -6,8 +6,6 @@ export const TestComponent = (props: {}) => {
   const currentBlock = useAppSelector(selectCurrentBlock)
   const dispatch = useAppDispatch()
 
-  console.log('[TestComponent] current block :', currentBlock)
-
   const onClick = () => {
     dispatch(actions.changePosition({ x: 0, y: 0 }))
   }

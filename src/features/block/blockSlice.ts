@@ -37,8 +37,6 @@ export const blockSlice = createSlice({
       state.currentBlock = nextBlock
       state.nextBlock = blockBag.splice(0, 1)[0]
 
-      console.log('[spawnNextBlock] currentBlock, nextBlock ', currentBlock, nextBlock)
-
       if (blockBag.length === 0) {
         state.blockBag = generateRandomBlockBag()
       }
@@ -54,8 +52,6 @@ export const blockSlice = createSlice({
         ...currentBlock,
         position
       }
-
-      console.log('[blockSlice.changePosition] changed current block: ', state.currentBlock)
     }
   }
 })

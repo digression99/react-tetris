@@ -28,7 +28,6 @@ const playfieldSlice = createSlice({
     // how can we trigger this, when currentBlock.y is at the bottom, or
     // collided with other blocks?
     mergeBlock: (state, action) => {
-      console.log('[playfieldSlice.mergeBlock] payload', action.payload)
       const { block } = action.payload
       const { fieldBuffer } = state
       state.fieldBuffer = mergeBlockToFieldBitMap(fieldBuffer, block)
