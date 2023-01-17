@@ -5,15 +5,9 @@ export const PLAYFIELD_PADDING = 2
 export const PLAYFIELD_HEIGHT = 22
 export const PLAYFIELD_WIDTH = 10
 
-export const PLAYFIELD_MAP = [
-  ...Array.from({ length: PLAYFIELD_HEIGHT }).map(() => [...NORMAL_ROW]),
-  BOTTOM,
-  BOTTOM
-]
-
 export const createPlayfieldMap = () => {
   return [
-  ...Array.from({ length: PLAYFIELD_HEIGHT }).map(() => [...NORMAL_ROW]),
+    ...Array.from({ length: PLAYFIELD_HEIGHT }).map(() => [...NORMAL_ROW]),
     [...BOTTOM],
     [...BOTTOM],
   ]

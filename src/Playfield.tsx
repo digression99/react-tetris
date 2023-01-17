@@ -11,8 +11,6 @@ export function Playfield() {
   const { start } = useCountTime((t: number) => {
     if (!field || !currentBlock) return
 
-      console.log('[useCountTime] calling....')
-
     const { result } = changeBlockPosition({
       ...currentBlock.position,
       y: currentBlock.position.y + 1
