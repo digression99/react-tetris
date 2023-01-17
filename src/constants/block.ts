@@ -172,3 +172,5 @@ export const TETRINOMIO_COLORS: Record<BlockType, BlockColor> = {
   z: 'red',
   t: 'purple',
 }
+
+export const ROTATION_COUNT = 4

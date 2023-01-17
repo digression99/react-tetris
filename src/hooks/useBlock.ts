@@ -42,12 +42,18 @@ export function useBlock() {
     }
   }
 
+  const rotateCurrentBlock = () => dispatch(actions.rotateCurrentBlock())
+
   return {
-    changeBlockPosition,
-    spawnNextBlock,
+    // states.
+    blockHistory,
     currentBlock,
     nextBlock,
-    blockHistory
+
+    // actions.
+    changeBlockPosition,
+    spawnNextBlock,
+    rotateCurrentBlock,
   }
 }
 

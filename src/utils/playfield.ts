@@ -22,10 +22,7 @@ export function drawBlockToFieldBitMap(block: Block, field: FieldBitMap) {
 }
 
 export const calculatePosition = (pos: Position, key: string) => {
-  if (key === 'w') {
-    // TODO - rotation.
-    return pos
-  } else if (key === 's') {
+    if (key === 's') {
     return { ...pos, y: pos.y + 1 }
   } else if (key === 'a') {
     return { ...pos, x: pos.x - 1 }

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Block } from '../../types';
-import { generateRandomBlockBag } from '../../utils/block';
+import { generateRandomBlockBag, rotateBlock } from '../../utils/block';
 
 export interface BlockState {
   currentBlock?: Block;
@@ -52,11 +52,16 @@ export const blockSlice = createSlice({
         ...currentBlock,
         position
       }
+    },
+
+    rotateCurrentBlock: (state) => {
+      const { currentBlock } = state
+      if (!currentBlock) return
+      state.currentBlock = rotateBlock(currentBlock)
     }
   }
 })
 
-// export const { changePosition, initializeBlock, spawnNextBlock } = blockSlice.actions;
 export const actions = blockSlice.actions;
 
 export const selectCurrentBlock = (state: RootState) => state.block.currentBlock;

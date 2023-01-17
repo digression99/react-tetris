@@ -1,4 +1,4 @@
-import { BLOCK_BITMAPS, TETRINOMIO_COLORS } from "../constants/block"
+import { BLOCK_BITMAPS, ROTATION_COUNT, TETRINOMIO_COLORS } from "../constants/block"
 import { PLAYFIELD_PADDING } from "../constants/playfield"
 import { Block, BlockType, FieldBitMap, Position } from "../types"
 
@@ -58,3 +58,6 @@ export function generateRandomBlockBag(): Block[] {
   }))
 }
 
+export function rotateBlock(block: Block) {
+  return { ...block, rot: block.rot + 1 % ROTATION_COUNT }
+}
