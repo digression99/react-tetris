@@ -4,12 +4,12 @@ import { Playfield } from './Playfield';
 function App() {
   return (
     <div>
-      <div>
-        <Playfield />
-      </div>
+      <h2>
+        React Tetris
+      </h2>
 
       <div>
-        <span>This is span.</span>
+        <Playfield />
       </div>
     </div>
   );
