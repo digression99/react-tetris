@@ -7,13 +7,15 @@ import { drawBlockToFieldBitMap, mergeBlockToFieldBitMap } from '../../utils/pla
 export interface PlayfieldState {
   fieldBuffer: FieldBitMap,
   // field?: FieldBitMap
-  gameStatus: 'pending' | 'started' | 'done'
+  gameStatus: 'pending' | 'started' | 'done',
+  gravity: number // if the gravity changes, the dropping speed changes.
 }
 
 export const initialState: PlayfieldState = {
   fieldBuffer: createPlayfieldMap(), // for merged blocks.
   // field: undefined, // for active map.
-  gameStatus: 'pending'
+  gameStatus: 'pending',
+    gravity: 1
 }
 
 const playfieldSlice = createSlice({

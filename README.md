@@ -13,6 +13,9 @@
 - [ ] Implement hard drop.
 - [ ] Implement game start / game end.
 - [ ] Implement line check.
+- [ ] Implement gravity change.
+- [x] Implement counter-clockwise rotation.
+- [ ] Show next block.
 
 ### Others
 
@@ -21,7 +24,10 @@
 ## Rotation System
 
 - This game follows the SRS rotation system.
-- The wallkick system is not implemented currently.
+- The wallkick follows the official check system,
+  where if rotation is applied and moving right or left is okay
+  to place the block, move the block to the granted position.
+- The floorkick is not enabled yet.
 
 ## Score System
 

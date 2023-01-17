@@ -54,10 +54,11 @@ export const blockSlice = createSlice({
       }
     },
 
-    rotateCurrentBlock: (state) => {
+    rotateCurrentBlock: (state, action) => {
+      const { rotation } = action.payload
       const { currentBlock } = state
       if (!currentBlock) return
-      state.currentBlock = rotateBlock(currentBlock)
+      state.currentBlock = rotateBlock(currentBlock, rotation)
     }
   }
 })

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { actions, selectBlockHistory, selectCurrentBlock, selectNextBlock } from '../features/block/blockSlice'
-import { FieldBitMap, Position } from '../types'
+import { BlockRotation, FieldBitMap, Position } from '../types'
 import { isBlockInBoundary } from '../utils/block'
 
 export function useBlock() {
@@ -42,7 +42,7 @@ export function useBlock() {
     }
   }
 
-  const rotateCurrentBlock = () => dispatch(actions.rotateCurrentBlock())
+  const rotateCurrentBlock = (rotation: BlockRotation) => dispatch(actions.rotateCurrentBlock({ rotation }))
 
   return {
     // states.

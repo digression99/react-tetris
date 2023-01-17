@@ -10,8 +10,19 @@ export function useGameController() {
   useKeyboard((key: string) => {
     if (!field || !currentBlock) return
     switch (key) {
-      case 'w': {
-        rotateCurrentBlock()
+      // case 'w': {
+      //   // Hard drop.
+      //   rotateCurrentBlock()
+      //   break
+      // }
+
+      case 'j': {
+        rotateCurrentBlock('c-clockwise')
+        break
+      }
+
+      case 'k': {
+        rotateCurrentBlock('clockwise')
         break
       }
       case 'a':
