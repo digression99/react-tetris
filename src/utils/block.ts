@@ -35,6 +35,7 @@ export function isBlockInBoundary(nextPos: Position, block: Block | undefined, f
 }
 
 export function getBlockBitMap(block: Block) {
+  // console.log('[getBlockBitMap] block :', block)
   const { rot, blockType } = block
   return BLOCK_BITMAPS[blockType][rot]
 }

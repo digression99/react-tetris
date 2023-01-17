@@ -3,6 +3,7 @@ import { Position, FieldBitMap, Block } from "../types"
 import { getBlockBitMap } from "./block"
 
 export function drawBlockToFieldBitMap(block: Block, field: FieldBitMap) {
+  // console.log('[drawBlockToFieldBitMap]block', block)
   const { x, y } = block.position
   const blockBitMap = getBlockBitMap(block)
   const h = blockBitMap.length
@@ -43,7 +44,9 @@ export function mergeBlockToFieldBitMap(field: FieldBitMap, block: Block) {
   const newField = field.map(row => [...row])
 
   for (let i = 0; i < l; ++i) {
-    for (let j = 0; j < w; ++j) { if (blockBitMap[i][j] === 1) newField[block.position.y + i][block.position.x + j] = 1 }
+    for (let j = 0; j < w; ++j) {
+      if (blockBitMap[i][j] === 1) newField[block.position.y + i][block.position.x + j] = 1
+    }
   }
 
   return newField

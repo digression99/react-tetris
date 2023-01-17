@@ -5,59 +5,37 @@ import { usePlayfield } from './hooks/usePlayfield'
 import { calculatePosition } from './utils/playfield'
 
 export function Playfield() {
-  // const [field, setField] = useState<FieldBitMap | undefined>(undefined)
-  const { mergeBlock, field, drawBlock } = usePlayfield()
+  const { mergeBlock, field } = usePlayfield()
   const { currentBlock, changeBlockPosition } = useBlock()
 
   const { start } = useCountTime((t: number) => {
-    console.log('[useCountTime.method] field, currentBlock :', field, currentBlock)
     if (!field || !currentBlock) return
+
+      console.log('[useCountTime] calling....')
 
     const { result } = changeBlockPosition({
       ...currentBlock.position,
       y: currentBlock.position.y + 1
     }, field)
 
+    // BUG - even if we call "changeBlockPosition", it doesn't change the block's position.
     if (!result) {
       mergeBlock()
-      drawBlock()
-      // setField(mergeBlock(field, currentBlock, blockPosition))
-      // changeBlockPosition(currentBlock.position, field)
-      return
     }
-
-    // TODO - update drawing the field to reactive way.
-    // setField(drawBlock(currentBlock, field, requested, original))
-  }, [field])
+  }, [field, currentBlock])
 
   useKeyboard((key: string) => {
     if (!field || !currentBlock) return
     const returnedPosition = calculatePosition(currentBlock.position, key)
     const { result } = changeBlockPosition(returnedPosition, field)
 
-    // if (result) {
-    //   setField(drawBlock(currentBlock, field, requested, original))
-    //   return
-    // }
-
     if (key === 's' && !result) {
       mergeBlock()
-      // mergeBlock(field, currentBlock)
-      // getNextBlock()
-      // the field should be drawn when 
-
-      // setField()
-      // setField(mergeBlock(field, currentBlock))
-      // setField(drawBlock(nextBlock, field, ))
-      // TODO - after merged, the block should position itself.
-      // changeBlockPosition(currentBlock.position, field)
     }
   })
 
   const onStart = () => {
-    console.log('[onStart] currentBlock', currentBlock)
     if (!currentBlock) return
-    // setField(drawBlock(currentBlock, PLAYFIELD_MAP, blockPosition, blockPosition))
     start()
   }
 

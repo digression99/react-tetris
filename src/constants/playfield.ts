@@ -11,4 +11,12 @@ export const PLAYFIELD_MAP = [
   BOTTOM
 ]
 
+export const createPlayfieldMap = () => {
+  return [
+  ...Array.from({ length: PLAYFIELD_HEIGHT }).map(() => [...NORMAL_ROW]),
+    [...BOTTOM],
+    [...BOTTOM],
+  ]
+}
+
 
