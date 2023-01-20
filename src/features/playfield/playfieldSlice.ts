@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import { FieldBitMap, PixelField } from '../../types/playfield'
-import { createPixelField, drawBlockToFieldBitMap, drawBlockToPixelField, getFieldBitMap, removeFullLines } from '../../utils/playfield'
+import { drawBlockToFieldBitMap } from '../../utils/playfield'
+import { createPixelField, drawBlockToPixelField, getFieldBitMap, removeFullLinesFromPixelField } from '../../utils/pixelField'
 
 export interface PlayfieldState {
   pixelField: PixelField
@@ -15,7 +16,6 @@ const initialPixelField = createPixelField()
 export const initialState: PlayfieldState = {
   pixelField: initialPixelField,
   fieldBuffer: getFieldBitMap(initialPixelField), // for merged blocks.
-  // field: undefined, // for active map.
   gameStatus: 'pending',
   gravity: 1
 }
@@ -34,12 +34,11 @@ const playfieldSlice = createSlice({
     // collided with other blocks?
     mergeBlock: (state, action) => {
       const { block } = action.payload
-      const { fieldBuffer } = state
-
-      // TODO - sync up with pixelField.
-      // state.fieldBuffer should be extracted from the pixelField.
-      // state.fieldBuffer should be used only in the case of checking collision and line check.
-      state.fieldBuffer = removeFullLines(drawBlockToFieldBitMap(block, fieldBuffer))
+      const { pixelField } = state
+      state.pixelField = removeFullLinesFromPixelField(
+        drawBlockToPixelField(block, pixelField)
+      )
+      state.fieldBuffer = getFieldBitMap(state.pixelField)
     }
   }
 })

@@ -4,7 +4,7 @@ import { BlockColor } from "./block"
 
 export interface Pixel {
   color: BlockColor | typeof EMPTY_COLOR | typeof WALL_COLOR
-  bit: Bit
+  bit: Bit // NOTE - do we need this?
   pixelType: 'normal'
 }
 
