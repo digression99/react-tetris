@@ -1,3 +1,4 @@
+// @deprecated
 import {
   PLAYFIELD_HEIGHT,
   PLAYFIELD_NORMAL_ROW,
@@ -6,6 +7,7 @@ import {
 import { Position, Block } from "../types/block"
 import { FieldBitMap } from "../types/playfield"
 import { getBlockBitMap } from "./block"
+
 
 // NOTE - all functions return the new object(deep copy).
 

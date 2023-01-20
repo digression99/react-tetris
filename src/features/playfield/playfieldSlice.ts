@@ -35,11 +35,20 @@ const playfieldSlice = createSlice({
     mergeBlock: (state, action) => {
       const { block } = action.payload
       const { pixelField } = state
+      console.log('[mergeBlock], block', block)
       state.pixelField = removeFullLinesFromPixelField(
         drawBlockToPixelField(block, pixelField)
       )
       state.fieldBuffer = getFieldBitMap(state.pixelField)
-    }
+    },
+
+    // hardDropBlock: (state, action) => {
+    //   const { block } = action.payload
+    //   const { pixelField } = state
+    //   const droppedBlock = hardDropBlock(block, pixelField)
+    //   state.pixelField = drawBlockToPixelField(droppedBlock, pixelField)
+    //   state.fieldBuffer = getFieldBitMap(state.pixelField)
+    // }
   }
 })
 

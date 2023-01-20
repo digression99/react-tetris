@@ -19,7 +19,9 @@ export function PixelFieldDisplay(props: Props) {
             style={{
               display: 'flex'
             }}
-            key={rowIndex}>{row.map((pixel, pixelIndex) => (
+            key={rowIndex}>
+            <span style={{ display: 'inline-block', width: '20px'}}>{rowIndex + 1}</span>
+            {row.map((pixel, pixelIndex) => (
               <PixelBlock key={pixelIndex} pixel={pixel} />
             ))}</div>
         ))}

@@ -1,6 +1,6 @@
 import { EMPTY_COLOR, PLAYFIELD_BOTTOM, PLAYFIELD_HEIGHT, PLAYFIELD_NORMAL_ROW, PLAYFIELD_PADDING, WALL_COLOR } from "../constants/playfield"
 import _ from 'lodash'
-import { Block } from "../types/block"
+import { Block, Position } from "../types/block"
 import { FieldBitMap, Pixel, PixelField } from "../types/playfield"
 import { getBlockBitMap } from "./block"
 
@@ -69,4 +69,46 @@ export function removeFullLinesFromPixelField(field: PixelField): PixelField {
   newField.reverse()
   return newField
 }
+
+function calculateMinHeight(pixelPosition: Position, field: FieldBitMap): number {
+  // NOTE - the valid playfield height is 22.
+  const { x, y } = pixelPosition
+
+  // the difference between total bottom.
+  let minHeight = PLAYFIELD_HEIGHT - y - 1
+  for (let i = y + 1; i < PLAYFIELD_HEIGHT; ++i) {
+    if (field[i][x] === 1) minHeight = i - y - 1
+  }
+  return minHeight
+}
+
+// returns position updated block.
+export function hardDropBlock(block: Block, fieldBitMap: FieldBitMap): Block {
+  const { x, y } = block.position
+  const blockBitMap = getBlockBitMap(block)
+  const l = blockBitMap.length
+  const w = blockBitMap[0].length
+
+  let minHeight = PLAYFIELD_HEIGHT - y
+
+  for (let i = 0; i < l; ++i) {
+    for (let j = 0; j < w; ++j) {
+      if (blockBitMap[i][j] === 1) {
+        const pixelPosition = { x: x + j, y: y + i }
+        const calculatedMinHeight = calculateMinHeight(pixelPosition, fieldBitMap)
+        minHeight = Math.min(minHeight, calculatedMinHeight)
+        console.log('minHeight', minHeight, pixelPosition, calculatedMinHeight)
+      }
+    }
+  }
+
+  console.log('calculated min height :', minHeight)
+
+  return {
+    ...block,
+    position: { x, y: y + minHeight }
+  }
+}
+
+
 
