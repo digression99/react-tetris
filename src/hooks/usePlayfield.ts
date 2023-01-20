@@ -9,7 +9,6 @@ export function usePlayfield() {
   const { currentBlock, spawnNextBlock } = useBlock()
 
   const mergeBlock = () => {
-    console.log('[usePlayfield.mergeBlock] called..')
     // NOTE - can we automatically detect if the block should be merged
     // only with the reactive data?
     // NOTE - could we ignore the order of this two actions? or

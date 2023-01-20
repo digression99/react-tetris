@@ -1,6 +1,16 @@
-import { NORMAL_ROW, PLAYFIELD_HEIGHT, PLAYFIELD_PADDING } from "../constants/playfield"
-import { Position, FieldBitMap, Block } from "../types"
+import {
+  EMPTY_COLOR,
+  PLAYFIELD_BOTTOM,
+  PLAYFIELD_HEIGHT,
+  PLAYFIELD_NORMAL_ROW,
+  PLAYFIELD_PADDING,
+  WALL_COLOR
+} from "../constants/playfield"
+import { Position, Block } from "../types/block"
+import { FieldBitMap, Pixel, PixelField } from "../types/playfield"
 import { getBlockBitMap } from "./block"
+
+// NOTE - all functions return the new object(deep copy).
 
 export function drawBlockToFieldBitMap(block: Block, field: FieldBitMap) {
   const { x, y } = block.position
@@ -33,20 +43,6 @@ export const calculatePosition = (pos: Position, key: string) => {
   return pos
 }
 
-export function mergeBlockToFieldBitMap(field: FieldBitMap, block: Block) {
-  const blockBitMap = getBlockBitMap(block)
-  const l = blockBitMap.length
-  const w = blockBitMap[0].length
-  const newField = field.map(row => [...row])
-
-  for (let i = 0; i < l; ++i) {
-    for (let j = 0; j < w; ++j) {
-      if (blockBitMap[i][j] === 1) newField[block.position.y + i][block.position.x + j] = 1
-    }
-  }
-
-  return newField
-}
 
 export function removeFullLines(field: FieldBitMap): FieldBitMap {
   const l = field.length
@@ -57,10 +53,55 @@ export function removeFullLines(field: FieldBitMap): FieldBitMap {
     const isFullLine = newField[i].every(pixel => pixel === 1)
     if (!isFullLine) continue
     newField.splice(i, 1)
-    newField.push(NORMAL_ROW)
+    newField.push(PLAYFIELD_NORMAL_ROW)
     --i
   }
 
   newField.reverse()
   return newField
 }
+
+export function getFieldBitMap(pixelField: PixelField): FieldBitMap {
+  return pixelField.map(pixelRow => pixelRow.map(pixel => pixel.bit))
+}
+
+
+function createPixelFromBit(bit: 0 | 1): Pixel {
+  return {
+    bit,
+    color: bit === 0 ? EMPTY_COLOR : WALL_COLOR,
+    pixelType: 'normal'
+  }
+}
+
+export function createPixelField(): PixelField {
+  return [
+    ...Array.from({
+      length: PLAYFIELD_HEIGHT
+    }).map(
+      () =>
+        PLAYFIELD_NORMAL_ROW.map(createPixelFromBit),
+    ),
+    PLAYFIELD_BOTTOM.map(createPixelFromBit),
+    PLAYFIELD_BOTTOM.map(createPixelFromBit),
+  ]
+}
+
+export function drawBlockToPixelField(block: Block, pixelField: PixelField) {
+  const { x, y } = block.position
+  const blockBitMap = getBlockBitMap(block)
+  const newPixelField = structuredClone(pixelField)
+  const l = blockBitMap.length
+  const w = blockBitMap[0].length
+
+  for (let i = 0; i < l; ++i) {
+    for (let j = 0; j < w; ++j) {
+      if (blockBitMap[i][j] === 1) {
+        newPixelField[y + i][x + j] = { color: block.color, bit: 1, pixelType: 'normal' }
+      }
+    }
+  }
+
+  return newPixelField
+}
+

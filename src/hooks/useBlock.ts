@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { actions, selectBlockHistory, selectCurrentBlock, selectNextBlock } from '../features/block/blockSlice'
-import { BlockRotation, FieldBitMap, Position } from '../types'
+import { BlockRotation, Position } from '../types/block'
+import { FieldBitMap } from '../types/playfield'
 import { isBlockInBoundary, rotateBlock } from '../utils/block'
 
 export function useBlock() {

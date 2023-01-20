@@ -1,17 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
-import { createPlayfieldMap } from '../../constants/playfield'
-import { FieldBitMap } from '../../types'
-import { drawBlockToFieldBitMap, mergeBlockToFieldBitMap, removeFullLines } from '../../utils/playfield'
+import { FieldBitMap, PixelField } from '../../types/playfield'
+import { createPixelField, drawBlockToFieldBitMap, drawBlockToPixelField, getFieldBitMap, removeFullLines } from '../../utils/playfield'
 
 export interface PlayfieldState {
-  fieldBuffer: FieldBitMap, // for merged blocks.
-  gameStatus: 'pending' | 'started' | 'done',
+  pixelField: PixelField
+  fieldBuffer: FieldBitMap // for merged blocks.
+  gameStatus: 'pending' | 'started' | 'done'
   gravity: number // if the gravity changes, the dropping speed changes.
 }
 
+const initialPixelField = createPixelField()
+
 export const initialState: PlayfieldState = {
-  fieldBuffer: createPlayfieldMap(), // for merged blocks.
+  pixelField: initialPixelField,
+  fieldBuffer: getFieldBitMap(initialPixelField), // for merged blocks.
   // field: undefined, // for active map.
   gameStatus: 'pending',
   gravity: 1
@@ -23,7 +26,8 @@ const playfieldSlice = createSlice({
   reducers: {
     initializePlayfield: (state) => {
       // TODO - when the game ends, initialize the field.
-      state.fieldBuffer = createPlayfieldMap();
+      state.pixelField = createPixelField()
+      state.fieldBuffer = getFieldBitMap(state.pixelField)
     },
     // NOTE - check if we could remove this action.
     // how can we trigger this, when currentBlock.y is at the bottom, or
@@ -31,7 +35,11 @@ const playfieldSlice = createSlice({
     mergeBlock: (state, action) => {
       const { block } = action.payload
       const { fieldBuffer } = state
-      state.fieldBuffer = removeFullLines(mergeBlockToFieldBitMap(fieldBuffer, block))
+
+      // TODO - sync up with pixelField.
+      // state.fieldBuffer should be extracted from the pixelField.
+      // state.fieldBuffer should be used only in the case of checking collision and line check.
+      state.fieldBuffer = removeFullLines(drawBlockToFieldBitMap(block, fieldBuffer))
     }
   }
 })
@@ -51,6 +59,13 @@ export const selectCurrentFieldMap = (state: RootState) => {
 
 export const selectFieldBuffer = (state: RootState) => {
   return state.playfield.fieldBuffer
+}
+
+export const selectPixelField = (state: RootState) => {
+  const currentBlock = state.block.currentBlock
+  if (!currentBlock) return
+
+  return drawBlockToPixelField(currentBlock, state.playfield.pixelField)
 }
 
 export default playfieldSlice.reducer;

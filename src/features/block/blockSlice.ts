@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { Block } from '../../types';
+import { Block } from '../../types/block';
 import { generateRandomBlockBag, rotateBlock } from '../../utils/block';
 
 export interface BlockState {

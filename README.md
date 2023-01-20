@@ -8,17 +8,17 @@
 - [x] define block types and figures.
 - [x] merge block if the block touches the bottom, and spawn the new block.
 - [x] rotate the block.
-- [ ] create a pixel object that represents which pixel is which color.
 - [ ] Add score system.
 - [ ] Implement hard drop.
 - [ ] Implement game start / game end.
-- [ ] Implement line check.
+- [x] Implement line check.
 - [ ] Implement gravity change.
 - [x] Implement counter-clockwise rotation.
 - [ ] Show next block.
 - [ ] Show colors for every pixel.
-  - Change every pixel as a object representation.
+  - create a pixel object that represents which pixel is which color.
   - Add type for pixel.
+- [ ] Restrain the action payload type.
 
 ### Others
 

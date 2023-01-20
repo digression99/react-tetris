@@ -1,6 +1,7 @@
 import { BLOCK_BITMAPS, ROTATION_COUNT, TETRINOMIO_COLORS } from "../constants/block"
 import { PLAYFIELD_PADDING } from "../constants/playfield"
-import { Block, BlockRotation, BlockType, FieldBitMap, Position } from "../types"
+import { Block, BlockRotation, BlockType, Position, RotationEnum } from "../types/block"
+import { FieldBitMap } from "../types/playfield"
 
 export function isBlockInBoundary(nextPos: Position, block: Block | undefined, field: FieldBitMap) {
   if (!block) return false
@@ -48,11 +49,12 @@ export function generateRandomBlockBag(): Block[] {
   }))
 }
 
-export function rotateBlock(block: Block, direction: BlockRotation) {
+export function rotateBlock(block: Block, direction: BlockRotation): Block {
   return {
     ...block,
-    rot: direction === 'clockwise'
-      ? (block.rot + 1) % ROTATION_COUNT
-      : (block.rot + ROTATION_COUNT - 1) % ROTATION_COUNT
+    rot:
+      (direction === 'clockwise'
+        ? (block.rot + 1) % ROTATION_COUNT
+        : (block.rot + ROTATION_COUNT - 1) % ROTATION_COUNT) as RotationEnum
   }
 }

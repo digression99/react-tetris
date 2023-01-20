@@ -1,4 +1,4 @@
-import { BlockColor, BlockType } from "../types"
+import { BlockColor, BlockType } from "../types/block"
 
 export const BLOCK_BITMAPS = {
   i: [
@@ -173,4 +173,6 @@ export const TETRINOMIO_COLORS: Record<BlockType, BlockColor> = {
   t: 'purple',
 }
 
+
 export const ROTATION_COUNT = 4
+
