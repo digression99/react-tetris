@@ -1,21 +1,31 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-import blockReducer from '../features/block/blockSlice'
-import playfieldReducer from '../features/playfield/playfieldSlice'
+import { configureStore, ThunkAction, Action, AnyAction, Dispatch } from '@reduxjs/toolkit';
+import blockReducer, { BlockState } from '../features/block/blockSlice'
+import playfieldReducer, { PlayfieldState } from '../features/playfield/playfieldSlice'
+import blockListener from '../features/block/blockListener'
+
+export type RootState = {
+  block: BlockState,
+  playfield: PlayfieldState
+}
+
+export type AppDispatch = Dispatch<AnyAction>
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     block: blockReducer,
     playfield: playfieldReducer
   },
+
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware().prepend(blockListener.middleware)
+  }
 });
 
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   RootState,
   unknown,
   Action<string>
 >;
+
+
