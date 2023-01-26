@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import './App.css';
 import { PixelFieldDisplay } from './components/PixelFieldDisplay';
 import { selectPixelField } from './features/playfield/playfieldSlice';
-import { Playfield } from './Playfield';
+import { Playfield } from './components/Playfield';
 
 function App() {
   const pixelField = useSelector(selectPixelField)
