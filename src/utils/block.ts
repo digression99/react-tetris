@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { BLOCK_BITMAPS, ROTATION_COUNT, TETRINOMIO_COLORS } from "../constants/block"
 import { PLAYFIELD_PADDING } from "../constants/playfield"
 import { Block, BlockRotation, BlockType, Position, RotationEnum } from "../types/block"
@@ -26,7 +27,6 @@ export function isBlockInBoundary(nextPos: Position, block: Block | undefined, f
 }
 
 export function getBlockBitMap(block: Block) {
-  // console.log('[getBlockBitMap] block :', block)
   const { rot, blockType } = block
   return BLOCK_BITMAPS[blockType][rot]
 }
@@ -34,7 +34,7 @@ export function getBlockBitMap(block: Block) {
 // https://tetris.fandom.com/wiki/Random_Generator 
 // 7 tetrinomios in a bag.
 function generateRandomTetrinomioBag(): BlockType[] {
-  return (['i', 'o', 's', 'z', 'j', 'l', 't'] as BlockType[]).sort()
+  return _.shuffle(['i', 'o', 's', 'z', 'j', 'l', 't'] as BlockType[])
 }
 
 export function generateRandomBlockBag(): Block[] {
@@ -58,3 +58,4 @@ export function rotateBlock(block: Block, direction: BlockRotation): Block {
         : (block.rot + ROTATION_COUNT - 1) % ROTATION_COUNT) as RotationEnum
   }
 }
+
