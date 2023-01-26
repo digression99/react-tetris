@@ -21,4 +21,25 @@ listenerMiddleware.startListening({
   }
 })
 
+listenerMiddleware.startListening({
+  actionCreator: playfieldActions.reduceTime,
+  effect: (action, listenerApi) => {
+    const state = listenerApi.getState()
+    const { timerMs, fieldBuffer } = state.playfield
+    const { currentBlock } = state.block
+
+    if (timerMs <= 0 && currentBlock) {
+      listenerApi.dispatch(
+        blockActions.changePosition({
+          position: {
+            ...currentBlock.position,
+            y: currentBlock.position.y + 1
+          },
+          field: fieldBuffer
+        })
+      )
+    }
+  }
+})
+
 export default listenerMiddleware

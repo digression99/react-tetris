@@ -14,10 +14,27 @@ listenerMiddleware.startListening({
     const { fieldBuffer } = state.playfield
 
     if (!currentBlock) return
-    console.log('[playfieldListener]', !isBlockInBoundary(currentBlock.position, currentBlock, fieldBuffer))
-
     if (!isBlockInBoundary(currentBlock.position, currentBlock, fieldBuffer)) {
       listenerApi.dispatch(playfieldActions.changeGameStatus({ status: 'done' }))
+      listenerApi.dispatch(playfieldActions.resetTimerMs())
+    }
+  }
+})
+
+listenerMiddleware.startListening({
+  actionCreator: playfieldActions.reduceTime,
+  effect: (action, listenerApi) => {
+    const state = listenerApi.getState()
+    const { timerMs, timeCount } = state.playfield
+
+    if (timeCount <= 0) {
+      listenerApi.dispatch(playfieldActions.changeGameStatus({ status: 'done' }))
+      return
+    }
+
+    if (timerMs <= 0) {
+      listenerApi.dispatch(playfieldActions.reduceTimerCount())
+      listenerApi.dispatch(playfieldActions.resetTimerMs())
     }
   }
 })

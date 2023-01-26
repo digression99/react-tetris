@@ -4,7 +4,12 @@ import { FieldBitMap, GameStatus, PixelField } from '../../types/playfield'
 import { drawBlockToFieldBitMap } from '../../utils/playfield'
 import { createPixelField, drawBlockToPixelField, getFieldBitMap, removeFullLinesFromPixelField } from '../../utils/pixelField'
 
+const INIT_TIMER_MS = 1000
+const INIT_TIME_COUNT = 60
+
 export interface PlayfieldState {
+  timeCount: number
+  timerMs: number
   pixelField: PixelField
   fieldBuffer: FieldBitMap // for merged blocks.
   gameStatus: GameStatus
@@ -14,6 +19,8 @@ export interface PlayfieldState {
 const initialPixelField = createPixelField()
 
 export const initialState: PlayfieldState = {
+  timerMs: INIT_TIMER_MS,
+  timeCount: INIT_TIME_COUNT, // 60 seconds.
   pixelField: initialPixelField,
   fieldBuffer: getFieldBitMap(initialPixelField), // for merged blocks.
   gameStatus: 'init',
@@ -25,9 +32,12 @@ const playfieldSlice = createSlice({
   initialState,
   reducers: {
     initializePlayfield: (state) => {
-      // TODO - when the game ends, initialize the field.
       state.pixelField = createPixelField()
       state.fieldBuffer = getFieldBitMap(state.pixelField)
+      state.gameStatus = 'init'
+      state.gravity = 1
+      state.timerMs = INIT_TIMER_MS
+      state.timeCount = INIT_TIME_COUNT
     },
 
     mergeBlock: (state, action) => {
@@ -40,9 +50,21 @@ const playfieldSlice = createSlice({
     },
 
     changeGameStatus: (state, action) => {
-      console.log('[changeGameStatus]')
       const { status } = action.payload
       state.gameStatus = status
+    },
+
+    resetTimerMs: (state) => {
+      state.timerMs = INIT_TIMER_MS
+    },
+
+    reduceTime: (state, action) => {
+      const { amount } = action.payload
+      state.timerMs -= amount
+    },
+
+    reduceTimerCount: (state) => {
+      state.timeCount -= 1
     }
   }
 })
@@ -71,6 +93,10 @@ export const selectPixelField = (state: RootState) => {
 
 export const selectGameStatus = (state: RootState) => {
   return state.playfield.gameStatus
+}
+
+export const selectTimeCount = (state: RootState) => {
+  return state.playfield.timeCount
 }
 
 export default playfieldSlice.reducer;

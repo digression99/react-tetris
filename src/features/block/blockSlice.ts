@@ -18,7 +18,6 @@ const initialState: BlockState = {
 }
 
 const spawnNextBlockReducer = (state: BlockState) => {
-  console.log('[spawnNextBlock] called.')
   const { currentBlock, nextBlock, blockBag } = state
 
   if (!currentBlock || !blockBag) return
