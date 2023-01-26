@@ -1,13 +1,13 @@
 import React from 'react'
 import { useAppSelector, useAppDispatch } from '../app/hooks'
-import { actions, selectCurrentBlock } from '../features/block/blockSlice'
+import { blockActions, selectCurrentBlock } from '../features/block/blockSlice'
 
 export const TestComponent = (props: {}) => {
   const currentBlock = useAppSelector(selectCurrentBlock)
   const dispatch = useAppDispatch()
 
   const onClick = () => {
-    dispatch(actions.changePosition({ x: 0, y: 0 }))
+    dispatch(blockActions.changePosition({ x: 0, y: 0 }))
   }
 
   return (

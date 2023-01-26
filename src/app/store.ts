@@ -2,6 +2,7 @@ import { configureStore, ThunkAction, Action, AnyAction, Dispatch } from '@redux
 import blockReducer, { BlockState } from '../features/block/blockSlice'
 import playfieldReducer, { PlayfieldState } from '../features/playfield/playfieldSlice'
 import blockListener from '../features/block/blockListener'
+import playfieldListener from '../features/playfield/playfieldListener'
 
 export type RootState = {
   block: BlockState,
@@ -17,7 +18,9 @@ export const store = configureStore({
   },
 
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().prepend(blockListener.middleware)
+    return getDefaultMiddleware()
+      .prepend(blockListener.middleware)
+      .prepend(playfieldListener.middleware)
   }
 });
 
