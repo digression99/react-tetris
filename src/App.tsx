@@ -1,5 +1,4 @@
 import { useSelector } from 'react-redux';
-import './App.css';
 import { PixelFieldDisplay } from './components/PixelFieldDisplay';
 import { selectPixelField } from './features/playfield/playfieldSlice';
 import { Playfield } from './components/Playfield';
