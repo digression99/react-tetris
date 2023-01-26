@@ -1,3 +1,4 @@
+import { Button } from '@chakra-ui/react'
 import { useBlock } from '../hooks/useBlock'
 import { useCountTime } from '../hooks/base/useCountTime'
 import { usePlayfield } from '../hooks/usePlayfield'
@@ -26,7 +27,7 @@ export function Playfield() {
 
   return (
     <div>
-      <button onClick={onStart}>Start!</button>
+      <Button onClick={onStart}>Start!</Button>
     </div>
   )
 }

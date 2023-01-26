@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { Heading } from '@chakra-ui/react'
 import { PixelFieldDisplay } from './components/PixelFieldDisplay';
 import { selectPixelField } from './features/playfield/playfieldSlice';
 import { Playfield } from './components/Playfield';
@@ -8,9 +9,9 @@ function App() {
 
   return (
     <div>
-      <h2>
+      <Heading>
         React Tetris
-      </h2>
+      </Heading>
 
       <div>
         <Playfield />
