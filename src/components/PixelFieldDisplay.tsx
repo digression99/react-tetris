@@ -7,12 +7,10 @@ type Props = {
 export function PixelFieldDisplay(props: Props) {
   const { pixelField } = props
 
+  const l = pixelField?.[0].length ?? 0
+
   return (
     <div>
-      <h2>
-        Pixel field display.
-      </h2>
-
       <div>
         {pixelField && pixelField.map((row, rowIndex) => (
           <div
@@ -20,11 +18,22 @@ export function PixelFieldDisplay(props: Props) {
               display: 'flex'
             }}
             key={rowIndex}>
-            <span style={{ display: 'inline-block', width: '20px'}}>{rowIndex + 1}</span>
+            <span style={{ display: 'inline-block', width: '20px' }}>{rowIndex}</span>
             {row.map((pixel, pixelIndex) => (
               <PixelBlock key={pixelIndex} pixel={pixel} />
             ))}</div>
         ))}
+      </div>
+      <div>
+        <span style={{
+          display: 'inline-block', width: '20px',
+        }}> </span>
+        {Array.from({ length: l }).map((_, i) => <span key={i} style={{
+          textAlign: 'center',
+          display: 'inline-block',
+          width: '20px',
+          margin: '0.5px'
+        }}>{i}</span>)}
       </div>
     </div>
   )
