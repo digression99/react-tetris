@@ -17,7 +17,7 @@ export const initialState: PlayfieldState = {
   pixelField: initialPixelField,
   fieldBuffer: getFieldBitMap(initialPixelField), // for merged blocks.
   gameStatus: 'pending',
-  gravity: 1
+  gravity: 1,
 }
 
 const playfieldSlice = createSlice({
@@ -29,26 +29,15 @@ const playfieldSlice = createSlice({
       state.pixelField = createPixelField()
       state.fieldBuffer = getFieldBitMap(state.pixelField)
     },
-    // NOTE - check if we could remove this action.
-    // how can we trigger this, when currentBlock.y is at the bottom, or
-    // collided with other blocks?
+
     mergeBlock: (state, action) => {
       const { block } = action.payload
       const { pixelField } = state
-      console.log('[mergeBlock], block', block)
       state.pixelField = removeFullLinesFromPixelField(
         drawBlockToPixelField(block, pixelField)
       )
       state.fieldBuffer = getFieldBitMap(state.pixelField)
     },
-
-    // hardDropBlock: (state, action) => {
-    //   const { block } = action.payload
-    //   const { pixelField } = state
-    //   const droppedBlock = hardDropBlock(block, pixelField)
-    //   state.pixelField = drawBlockToPixelField(droppedBlock, pixelField)
-    //   state.fieldBuffer = getFieldBitMap(state.pixelField)
-    // }
   }
 })
 
@@ -60,8 +49,6 @@ export const selectCurrentFieldMap = (state: RootState) => {
   const currentBlock = state.block.currentBlock
   const fieldBuffer = state.playfield.fieldBuffer
   if (!currentBlock || !fieldBuffer) return undefined;
-  // TODO - check if the field map updates
-  // after the block position changes.
   return drawBlockToFieldBitMap(currentBlock, fieldBuffer)
 }
 

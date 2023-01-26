@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Block } from '../../types/block';
-import { generateRandomBlockBag, rotateBlock } from '../../utils/block';
+import { generateRandomBlockBag, isBlockInBoundary, rotateBlock } from '../../utils/block';
+import { actions as playfieldActions } from '../playfield/playfieldSlice'
 
 export interface BlockState {
   currentBlock?: Block;
@@ -17,9 +18,26 @@ const initialState: BlockState = {
   blockHistory: []
 }
 
+const spawnNextBlockReducer = (state: BlockState) => {
+  const { currentBlock, nextBlock, blockBag } = state
+
+  if (!currentBlock || !blockBag) return
+
+  state.blockHistory.push(currentBlock)
+  state.currentBlock = nextBlock
+  state.nextBlock = blockBag.splice(0, 1)[0]
+
+  if (blockBag.length === 0) {
+    state.blockBag = generateRandomBlockBag()
+  }
+}
+
 export const blockSlice = createSlice({
   name: 'block',
   initialState,
+  extraReducers: builder => {
+    builder.addCase(playfieldActions.mergeBlock.toString(), spawnNextBlockReducer)
+  },
   reducers: {
     initializeBlock: (state) => {
       const [current, ...bag] = generateRandomBlockBag()
@@ -28,38 +46,28 @@ export const blockSlice = createSlice({
       state.blockBag = bag
     },
 
-    spawnNextBlock: (state) => {
-      const { currentBlock, nextBlock, blockBag } = state
-
-      if (!currentBlock || !blockBag) return
-
-      state.blockHistory.push(currentBlock)
-      state.currentBlock = nextBlock
-      state.nextBlock = blockBag.splice(0, 1)[0]
-
-      if (blockBag.length === 0) {
-        state.blockBag = generateRandomBlockBag()
-      }
-    },
-
     changePosition: (state, action) => {
-      const { position } = action.payload
+      const { isMerged, position, field } = action.payload
       const { currentBlock } = state
 
       if (!currentBlock) return
+      if (!isBlockInBoundary(position, currentBlock, field)) return
 
       state.currentBlock = {
         ...currentBlock,
-        position
+        position,
+        isMerged
       }
     },
 
     rotateCurrentBlock: (state, action) => {
-      const { rotation } = action.payload
+      const { rotation, field } = action.payload
       const { currentBlock } = state
       if (!currentBlock) return
-      state.currentBlock = rotateBlock(currentBlock, rotation)
-    }
+      const rotatedBlock = rotateBlock(currentBlock, rotation)
+      if (!isBlockInBoundary(rotatedBlock.position, currentBlock, field)) return
+      state.currentBlock = rotatedBlock
+    },
   }
 })
 
