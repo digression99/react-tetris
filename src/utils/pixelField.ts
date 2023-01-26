@@ -53,7 +53,8 @@ export function getFieldBitMap(pixelField: PixelField): FieldBitMap {
 // TODO - remove duplication from FieldBitMap
 export function removeFullLinesFromPixelField(field: PixelField): PixelField {
   const l = field.length
-  const newField = field.map(row => [...row])
+  const newField = _.cloneDeep(field)
+
   newField.reverse()
 
   for (let i = PLAYFIELD_PADDING; i < l; ++i) {
@@ -74,10 +75,12 @@ function calculateMinHeight(pixelPosition: Position, field: FieldBitMap): number
   // NOTE - the valid playfield height is 22.
   const { x, y } = pixelPosition
 
+  // FIXME - Bug exists here!
   // the difference between total bottom.
-  let minHeight = PLAYFIELD_HEIGHT - y - 1
+  let minHeight = 0
   for (let i = y + 1; i < PLAYFIELD_HEIGHT; ++i) {
-    if (field[i][x] === 1) minHeight = i - y - 1
+    if (field[i][x] === 1) return minHeight
+    minHeight++
   }
   return minHeight
 }
@@ -97,12 +100,10 @@ export function hardDropBlock(block: Block, fieldBitMap: FieldBitMap): Block {
         const pixelPosition = { x: x + j, y: y + i }
         const calculatedMinHeight = calculateMinHeight(pixelPosition, fieldBitMap)
         minHeight = Math.min(minHeight, calculatedMinHeight)
-        console.log('minHeight', minHeight, pixelPosition, calculatedMinHeight)
+        // NOTE - minHeight is calculated, not considering the merged field.
       }
     }
   }
-
-  console.log('calculated min height :', minHeight)
 
   return {
     ...block,
