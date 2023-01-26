@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react"
-import { PixelField, Pixel } from "../types/playfield"
+import { PixelField } from "../types/playfield"
+import { PixelBlock } from "./PixelBlock"
 
 type Props = {
   pixelField: PixelField | undefined
@@ -38,22 +39,3 @@ export function PixelFieldDisplay(props: Props) {
   )
 }
 
-type PixelProps = {
-  pixel: Pixel
-}
-
-function PixelBlock(props: PixelProps) {
-  const { color } = props.pixel
-
-  return (
-    <Box
-      display='inline-block'
-      boxSizing='border-box'
-      backgroundColor={color}
-      width='20px'
-      height='20px'
-      border='0.5px solid gray'
-      margin='0.5px'
-    />
-  )
-}
