@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useCallback, useState, useEffect, useRef } from 'react'
 
 export function useCountTime(fn: (time: number) => void, deps: any[]) {
   const [time, setTime] = useState(0)
   const prevTime = useRef<number>(0)
-  const [intervalTimerId, setIntervalTimerId] = useState<number | undefined>(undefined)
+  const intervalTimerId = useRef<number | undefined>(undefined)
 
   useEffect(() => {
     // should be trigged only when the time is changed.
@@ -12,7 +12,8 @@ export function useCountTime(fn: (time: number) => void, deps: any[]) {
     fn(time)
   }, [time, fn, ...deps])
 
-  const start = () => {
+  const start = useCallback(() => {
+    if (intervalTimerId.current) return
     // start timer.
     const timerId = window.setInterval(() => {
       setTime(t => {
@@ -20,12 +21,12 @@ export function useCountTime(fn: (time: number) => void, deps: any[]) {
       })
     }, 1000)
 
-    setIntervalTimerId(timerId)
-  }
+    intervalTimerId.current = timerId
+  }, [])
 
-  const stop = () => {
-    window.clearInterval(intervalTimerId)
-  }
+  const stop = useCallback(() => {
+    window.clearInterval(intervalTimerId.current)
+  }, [])
 
   return {
     time,

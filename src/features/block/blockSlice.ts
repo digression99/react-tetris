@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Block } from '../../types/block';
 import { generateRandomBlockBag, isBlockInBoundary, rotateBlock } from '../../utils/block';
-import { actions as playfieldActions } from '../playfield/playfieldSlice'
 
 export interface BlockState {
   currentBlock?: Block;
@@ -19,6 +18,7 @@ const initialState: BlockState = {
 }
 
 const spawnNextBlockReducer = (state: BlockState) => {
+  console.log('[spawnNextBlock] called.')
   const { currentBlock, nextBlock, blockBag } = state
 
   if (!currentBlock || !blockBag) return
@@ -35,10 +35,8 @@ const spawnNextBlockReducer = (state: BlockState) => {
 export const blockSlice = createSlice({
   name: 'block',
   initialState,
-  extraReducers: builder => {
-    builder.addCase(playfieldActions.mergeBlock.toString(), spawnNextBlockReducer)
-  },
   reducers: {
+    spawnNextBlock: spawnNextBlockReducer,
     initializeBlock: (state) => {
       const [current, ...bag] = generateRandomBlockBag()
       state.currentBlock = current
@@ -71,7 +69,7 @@ export const blockSlice = createSlice({
   }
 })
 
-export const actions = blockSlice.actions;
+export const blockActions = blockSlice.actions;
 
 export const selectCurrentBlock = (state: RootState) => state.block.currentBlock;
 export const selectNextBlock = (state: RootState) => state.block.nextBlock;

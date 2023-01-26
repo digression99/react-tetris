@@ -1,13 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { Action, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
-import { FieldBitMap, PixelField } from '../../types/playfield'
+import { FieldBitMap, GameStatus, PixelField } from '../../types/playfield'
 import { drawBlockToFieldBitMap } from '../../utils/playfield'
 import { createPixelField, drawBlockToPixelField, getFieldBitMap, removeFullLinesFromPixelField } from '../../utils/pixelField'
 
 export interface PlayfieldState {
   pixelField: PixelField
   fieldBuffer: FieldBitMap // for merged blocks.
-  gameStatus: 'pending' | 'started' | 'done'
+  gameStatus: GameStatus
   gravity: number // if the gravity changes, the dropping speed changes.
 }
 
@@ -16,7 +16,7 @@ const initialPixelField = createPixelField()
 export const initialState: PlayfieldState = {
   pixelField: initialPixelField,
   fieldBuffer: getFieldBitMap(initialPixelField), // for merged blocks.
-  gameStatus: 'pending',
+  gameStatus: 'init',
   gravity: 1,
 }
 
@@ -38,10 +38,16 @@ const playfieldSlice = createSlice({
       )
       state.fieldBuffer = getFieldBitMap(state.pixelField)
     },
+
+    changeGameStatus: (state, action) => {
+      console.log('[changeGameStatus]')
+      const { status } = action.payload
+      state.gameStatus = status
+    }
   }
 })
 
-export const actions = playfieldSlice.actions;
+export const playfieldActions = playfieldSlice.actions;
 
 // compound selectors.
 // This is the reactive version of "drawBlock"
@@ -61,6 +67,10 @@ export const selectPixelField = (state: RootState) => {
   if (!currentBlock) return
 
   return drawBlockToPixelField(currentBlock, state.playfield.pixelField)
+}
+
+export const selectGameStatus = (state: RootState) => {
+  return state.playfield.gameStatus
 }
 
 export default playfieldSlice.reducer;

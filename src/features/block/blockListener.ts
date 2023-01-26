@@ -1,7 +1,7 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit'
 import { AppDispatch, RootState } from '../../app/store'
-import { actions as playfieldActions } from '../../features/playfield/playfieldSlice'
-import { actions as blockActions } from './blockSlice'
+import { playfieldActions } from '../../features/playfield/playfieldSlice'
+import { blockActions } from './blockSlice'
 
 const listenerMiddleware = createListenerMiddleware<RootState, AppDispatch>()
 
@@ -16,6 +16,7 @@ listenerMiddleware.startListening({
 
     if (isMerged || position.y !== currentBlock.position.y) {
       listenerApi.dispatch(playfieldActions.mergeBlock({ block: currentBlock }))
+      listenerApi.dispatch(blockActions.spawnNextBlock())
     }
   }
 })
