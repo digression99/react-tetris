@@ -65,7 +65,7 @@ export const blockSlice = createSlice({
       const { currentBlock } = state
       if (!currentBlock) return
       const rotatedBlock = rotateBlock(currentBlock, rotation)
-      if (!isBlockInBoundary(rotatedBlock.position, currentBlock, field)) return
+      if (!isBlockInBoundary(rotatedBlock.position, rotatedBlock, field)) return
       state.currentBlock = rotatedBlock
     },
   }
