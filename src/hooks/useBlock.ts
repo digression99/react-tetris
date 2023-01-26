@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { blockActions, selectBlockHistory, selectCurrentBlock, selectNextBlock } from '../features/block/blockSlice'
 import { selectFieldBuffer } from '../features/playfield/playfieldSlice'
@@ -11,18 +11,18 @@ export function useBlock() {
   const blockHistory = useAppSelector(selectBlockHistory)
   const fieldBuffer = useAppSelector(selectFieldBuffer)
 
-  const changeBlockPosition = (requestedPosition: Position, isMerged: boolean = false) => {
+  const changeBlockPosition = useCallback((requestedPosition: Position, isMerged: boolean = false) => {
     dispatch(blockActions.changePosition({ position: requestedPosition, field: fieldBuffer, isMerged }))
-  }
+  }, [dispatch, fieldBuffer])
 
-  const rotateCurrentBlock = (rotation: BlockRotation) => {
+  const rotateCurrentBlock = useCallback((rotation: BlockRotation) => {
     if (!fieldBuffer || !currentBlock) return
     dispatch(blockActions.rotateCurrentBlock({ rotation, field: fieldBuffer }))
-  }
+  }, [currentBlock, dispatch, fieldBuffer])
 
-  const initializeBlock = () => {
+  const initializeBlock = useCallback(() => {
     dispatch(blockActions.initializeBlock())
-  }
+  }, [dispatch])
 
   return {
     // states.

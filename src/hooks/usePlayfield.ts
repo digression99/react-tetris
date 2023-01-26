@@ -1,4 +1,5 @@
-import { playfieldActions, selectCurrentFieldMap, selectGameStatus, selectFieldBuffer, selectPixelField } from '../features/playfield/playfieldSlice'
+import { useCallback } from 'react'
+import { playfieldActions, selectCurrentFieldMap, selectGameStatus, selectFieldBuffer, selectPixelField, selectTimeCount } from '../features/playfield/playfieldSlice'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { GameStatus } from '../types/playfield'
 
@@ -7,15 +8,37 @@ export function usePlayfield() {
   const fieldBuffer = useAppSelector(selectFieldBuffer)
   const field = useAppSelector(selectCurrentFieldMap)
   const gameStatus = useAppSelector(selectGameStatus)
+  const timeCount = useAppSelector(selectTimeCount)
   const dispatch = useAppDispatch()
 
-  const initializeField = () => {
+  const initializeField = useCallback(() => {
     dispatch(playfieldActions.initializePlayfield())
-  }
+  }, [dispatch])
 
-  const changeGameStatus = (status: GameStatus) => {
+  const changeGameStatus = useCallback((status: GameStatus) => {
     dispatch(playfieldActions.changeGameStatus({ status }))
-  }
+  }, [dispatch])
 
-  return { field, fieldBuffer, pixelField, initializeField, gameStatus, changeGameStatus }
+  const reduceTime = useCallback((amount: number) => {
+    dispatch(playfieldActions.reduceTime({ amount }))
+  }, [dispatch])
+
+  const resetTimerMs = useCallback(() => {
+    dispatch(playfieldActions.resetTimerMs())
+  }, [dispatch])
+
+  return {
+    // state
+    timeCount,
+    field,
+    fieldBuffer,
+    pixelField,
+
+    // actions
+    initializeField,
+    gameStatus,
+    changeGameStatus,
+    reduceTime,
+    resetTimerMs
+  }
 }
