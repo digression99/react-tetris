@@ -10,3 +10,5 @@ export interface Pixel {
 
 export type FieldBitMap = Bit[][]
 export type PixelField = Pixel[][]
+
+export type GameStatus = 'init' | 'pending' | 'started' | 'done'
