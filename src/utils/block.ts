@@ -44,7 +44,7 @@ export function generateRandomBlockBag(): Block[] {
     blockType,
     rot: 0,
     color: TETRINOMIO_COLORS[blockType],
-    position: { x: PLAYFIELD_PADDING, y: 0 },
+    position: { x: PLAYFIELD_PADDING + 3, y: 0 }, // TODO - in the middle.
     isMerged: false
   }))
 }
