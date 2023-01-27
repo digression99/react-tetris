@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { playfieldActions, selectCurrentFieldMap, selectGameStatus, selectFieldBuffer, selectPixelField, selectTimeCount } from '../features/playfield/playfieldSlice'
+import { playfieldActions, selectCurrentFieldMap, selectGameStatus, selectFieldBuffer, selectPixelField, selectTimeCount, selectLinesLeft, selectLevel, selectScore } from '../features/playfield/playfieldSlice'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { GameStatus } from '../types/playfield'
 
@@ -9,6 +9,9 @@ export function usePlayfield() {
   const field = useAppSelector(selectCurrentFieldMap)
   const gameStatus = useAppSelector(selectGameStatus)
   const timeCount = useAppSelector(selectTimeCount)
+  const linesLeft = useAppSelector(selectLinesLeft)
+  const level = useAppSelector(selectLevel)
+  const score = useAppSelector(selectScore)
   const dispatch = useAppDispatch()
 
   const initializeField = useCallback(() => {
@@ -33,6 +36,9 @@ export function usePlayfield() {
     field,
     fieldBuffer,
     pixelField,
+    linesLeft,
+    score,
+    level,
 
     // actions
     initializeField,

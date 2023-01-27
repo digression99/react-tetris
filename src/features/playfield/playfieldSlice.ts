@@ -1,4 +1,4 @@
-import { Action, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import { FieldBitMap, GameStatus, PixelField } from '../../types/playfield'
 import { drawBlockToFieldBitMap } from '../../utils/playfield'
@@ -13,7 +13,9 @@ export interface PlayfieldState {
   pixelField: PixelField
   fieldBuffer: FieldBitMap // for merged blocks.
   gameStatus: GameStatus
-  gravity: number // if the gravity changes, the dropping speed changes.
+  score: number
+  linesLeft: number
+  level: number // if the level changes, the dropping speed changes. 
 }
 
 const initialPixelField = createPixelField()
@@ -24,7 +26,9 @@ export const initialState: PlayfieldState = {
   pixelField: initialPixelField,
   fieldBuffer: getFieldBitMap(initialPixelField), // for merged blocks.
   gameStatus: 'init',
-  gravity: 1,
+  score: 0,
+  linesLeft: 10,
+  level: 1
 }
 
 const playfieldSlice = createSlice({
@@ -35,9 +39,11 @@ const playfieldSlice = createSlice({
       state.pixelField = createPixelField()
       state.fieldBuffer = getFieldBitMap(state.pixelField)
       state.gameStatus = 'init'
-      state.gravity = 1
       state.timerMs = INIT_TIMER_MS
       state.timeCount = INIT_TIME_COUNT
+      state.level = 1
+      state.score = 0
+      state.linesLeft = 10
     },
 
     mergeBlock: (state, action) => {
@@ -97,6 +103,18 @@ export const selectGameStatus = (state: RootState) => {
 
 export const selectTimeCount = (state: RootState) => {
   return state.playfield.timeCount
+}
+
+export const selectScore = (state: RootState) => {
+  return state.playfield.score
+}
+
+export const selectLinesLeft = (state: RootState) => {
+  return state.playfield.linesLeft
+}
+
+export const selectLevel = (state: RootState) => {
+  return state.playfield.level
 }
 
 export default playfieldSlice.reducer;

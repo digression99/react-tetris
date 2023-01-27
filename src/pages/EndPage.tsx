@@ -3,7 +3,7 @@ import { PageLayout } from '../components/PageLayout'
 import { usePlayfield } from '../hooks/usePlayfield'
 
 export function EndPage() {
-  const { changeGameStatus } = usePlayfield()
+  const { changeGameStatus, score, level } = usePlayfield()
 
   const onRetry = () => {
     changeGameStatus('init')
@@ -14,12 +14,12 @@ export function EndPage() {
       <Flex h='100%' justifyContent='center' alignItems='center' direction='column'>
         <Box>
           <Heading>Score</Heading>
-          <Text>12345</Text>
+          <Text>{score}</Text>
         </Box>
 
         <Box>
           <Heading>Level</Heading>
-          <Text>43</Text>
+          <Text>{level}</Text>
         </Box>
 
         <Box mt='8'>
