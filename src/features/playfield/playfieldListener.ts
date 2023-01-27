@@ -15,6 +15,7 @@ listenerMiddleware.startListening({
 
     if (!currentBlock) return
     if (!isBlockInBoundary(currentBlock.position, currentBlock, fieldBuffer)) {
+      console.log('[listener] GAME DONE', currentBlock.position, fieldBuffer)
       listenerApi.dispatch(playfieldActions.changeGameStatus({ status: 'done' }))
       listenerApi.dispatch(playfieldActions.resetTimerMs())
     }
@@ -35,6 +36,18 @@ listenerMiddleware.startListening({
     if (timerMs <= 0) {
       listenerApi.dispatch(playfieldActions.reduceTimerCount())
       listenerApi.dispatch(playfieldActions.resetTimerMs())
+    }
+  }
+})
+
+listenerMiddleware.startListening({
+  actionCreator: playfieldActions.mergeBlock,
+  effect: (action, listenerApi) => {
+    const state = listenerApi.getState()
+    const { linesLeft } = state.playfield
+
+    if (linesLeft <= 0) {
+      listenerApi.dispatch(playfieldActions.levelUp())
     }
   }
 })

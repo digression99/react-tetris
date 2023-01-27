@@ -4,7 +4,7 @@ import { PixelFieldDisplay } from '../components/PixelFieldDisplay';
 import { usePlayfield } from '../hooks/usePlayfield';
 
 export function GamePage() {
-  const { level, score, gameStatus, pixelField, timeCount } = usePlayfield()
+  const { linesLeft, level, score, gameStatus, pixelField, timeCount } = usePlayfield()
   // TODO - show time left, score, line left, level, next block
 
   return (
@@ -16,6 +16,7 @@ export function GamePage() {
           <Text>Game status: {gameStatus}</Text>
           <Text>Level: {level}</Text>
           <Text>Score: {score}</Text>
+          <Text>Lines Left: {linesLeft}</Text>
         </Box>
       </Flex>
     </PageLayout>
