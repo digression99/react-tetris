@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import { FieldBitMap, GameStatus, PixelField } from '../../types/playfield'
 import { drawBlockToFieldBitMap } from '../../utils/playfield'
-import { createPixelField, drawBlockToPixelField, getFieldBitMap, removeFullLinesFromPixelField } from '../../utils/pixelField'
+import { createPixelField, detectFullLinesFromPixelField, drawBlockToPixelField, getFieldBitMap, removeFullLinesFromPixelField } from '../../utils/pixelField'
+import { calculateScore } from '../../utils/score'
 
 const INIT_TIMER_MS = 1000
 const INIT_TIME_COUNT = 60
@@ -48,10 +49,13 @@ const playfieldSlice = createSlice({
 
     mergeBlock: (state, action) => {
       const { block } = action.payload
-      const { pixelField } = state
-      state.pixelField = removeFullLinesFromPixelField(
-        drawBlockToPixelField(block, pixelField)
-      )
+      const { pixelField, level } = state
+
+      const tempPixelField = drawBlockToPixelField(block, pixelField)
+      const removedLinesCount = detectFullLinesFromPixelField(tempPixelField)
+
+      state.score += calculateScore(removedLinesCount, level)
+      state.pixelField = removeFullLinesFromPixelField(tempPixelField)
       state.fieldBuffer = getFieldBitMap(state.pixelField)
     },
 

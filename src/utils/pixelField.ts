@@ -71,6 +71,13 @@ export function removeFullLinesFromPixelField(field: PixelField): PixelField {
   return newField
 }
 
+export function detectFullLinesFromPixelField(field: PixelField): number {
+  return field.reduce((cnt, row) => {
+    const isFullLine = row.every(pixel => pixel.bit === 1)
+    return +isFullLine + cnt
+  }, -2) // last two lines are padding.
+}
+
 function calculateMinHeight(pixelPosition: Position, field: FieldBitMap): number {
   // NOTE - the valid playfield height is 22.
   const { x, y } = pixelPosition
